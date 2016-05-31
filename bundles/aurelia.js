@@ -15452,7 +15452,7 @@ define('aurelia-router',['exports', 'aurelia-logging', 'aurelia-route-recognizer
 
       for (var i = 0, length = nav.length; i < length; i++) {
         var _current2 = nav[i];
-        if (!_current2.href) {
+        if (!_current2.config.href) {
           _current2.href = _createRootedPath(_current2.relativeHref, this.baseUrl, this.history._hasPushState);
         }
       }
@@ -15796,9 +15796,67 @@ define('aurelia-router',['exports', 'aurelia-logging', 'aurelia-route-recognizer
     return output;
   }
 
+  var SafeSubscription = function () {
+    function SafeSubscription(subscriptionFunc) {
+      _classCallCheck(this, SafeSubscription);
+
+      this._subscribed = true;
+      this._subscription = subscriptionFunc(this);
+
+      if (!this._subscribed) this.unsubscribe();
+    }
+
+    SafeSubscription.prototype.unsubscribe = function unsubscribe() {
+      if (this._subscribed && this._subscription) this._subscription.unsubscribe();
+
+      this._subscribed = false;
+    };
+
+    _createClass(SafeSubscription, [{
+      key: 'subscribed',
+      get: function get() {
+        return this._subscribed;
+      }
+    }]);
+
+    return SafeSubscription;
+  }();
+
   function processPotential(obj, resolve, reject) {
     if (obj && typeof obj.then === 'function') {
       return Promise.resolve(obj).then(resolve).catch(reject);
+    }
+
+    if (obj && typeof obj.subscribe === 'function') {
+      var _ret4 = function () {
+        var obs = obj;
+        return {
+          v: new SafeSubscription(function (sub) {
+            return obs.subscribe({
+              next: function next() {
+                if (sub.subscribed) {
+                  sub.unsubscribe();
+                  resolve(obj);
+                }
+              },
+              error: function error(_error) {
+                if (sub.subscribed) {
+                  sub.unsubscribe();
+                  reject(_error);
+                }
+              },
+              complete: function complete() {
+                if (sub.subscribed) {
+                  sub.unsubscribe();
+                  resolve(obj);
+                }
+              }
+            });
+          })
+        };
+      }();
+
+      if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
     }
 
     try {
@@ -15910,7 +15968,7 @@ define('aurelia-router',['exports', 'aurelia-logging', 'aurelia-route-recognizer
       component.config = config;
 
       if ('configureRouter' in viewModel) {
-        var _ret4 = function () {
+        var _ret5 = function () {
           var childRouter = childContainer.getChildRouter();
           component.childRouter = childRouter;
 
@@ -15923,7 +15981,7 @@ define('aurelia-router',['exports', 'aurelia-logging', 'aurelia-route-recognizer
           };
         }();
 
-        if ((typeof _ret4 === 'undefined' ? 'undefined' : _typeof(_ret4)) === "object") return _ret4.v;
+        if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
       }
 
       return component;
@@ -16067,11 +16125,11 @@ define('aurelia-router',['exports', 'aurelia-logging', 'aurelia-route-recognizer
       _Router.prototype.registerViewPort.call(this, viewPort, name);
 
       if (!this.isActive) {
-        var _ret5 = function () {
+        var _ret6 = function () {
           var viewModel = _this10._findViewModel(viewPort);
           if ('configureRouter' in viewModel) {
             if (!_this10.isConfigured) {
-              var _ret6 = function () {
+              var _ret7 = function () {
                 var resolveConfiguredPromise = _this10._resolveConfiguredPromise;
                 _this10._resolveConfiguredPromise = function () {};
                 return {
@@ -16086,14 +16144,14 @@ define('aurelia-router',['exports', 'aurelia-logging', 'aurelia-route-recognizer
                 };
               }();
 
-              if ((typeof _ret6 === 'undefined' ? 'undefined' : _typeof(_ret6)) === "object") return _ret6.v;
+              if ((typeof _ret7 === 'undefined' ? 'undefined' : _typeof(_ret7)) === "object") return _ret7.v;
             }
           } else {
             _this10.activate();
           }
         }();
 
-        if ((typeof _ret5 === 'undefined' ? 'undefined' : _typeof(_ret5)) === "object") return _ret5.v;
+        if ((typeof _ret6 === 'undefined' ? 'undefined' : _typeof(_ret6)) === "object") return _ret6.v;
       } else {
         this._dequeueInstruction();
       }
@@ -19856,6 +19914,7 @@ define('aurelia-templating-resources', ['aurelia-templating-resources/aurelia-te
           "aurelia-templating-router",
           "aurelia-templating-resources",
 
+          // "aurelia-animator-css",
           // "aurelia-breeze",
           // "aurelia-i18n",
           // "aurelia-validation",
