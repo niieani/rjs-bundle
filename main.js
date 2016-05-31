@@ -7,7 +7,8 @@
 export function configure(aurelia) {
   aurelia.use
     .standardConfiguration()
-    .developmentLogging();
+    .developmentLogging()
+    .plugin('aurelia-animator-css');
     // .plugin('aurelia-ui-virtualization')
     // .plugin('aurelia-i18n')
     // .plugin('aurelia-breeze');
