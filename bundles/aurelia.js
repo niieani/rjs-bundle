@@ -19887,7 +19887,7 @@ define('aurelia-templating-resources/aurelia-templating-resources',['exports', '
 });
 define('aurelia-templating-resources', ['aurelia-templating-resources/aurelia-templating-resources'], function (main) { return main; });
 
-define('aurelia-animator-css',['exports', 'aurelia-templating', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaPal) {
+define('aurelia-animator-css/aurelia-animator-css',['exports', 'aurelia-templating', 'aurelia-pal'], function (exports, _aureliaTemplating, _aureliaPal) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -20366,6 +20366,8 @@ define('aurelia-animator-css',['exports', 'aurelia-templating', 'aurelia-pal'], 
     }
   }
 });
+define('aurelia-animator-css', ['aurelia-animator-css/aurelia-animator-css'], function (main) { return main; });
+
 
         define('aurelia-manifest',[
           "aurelia-binding",

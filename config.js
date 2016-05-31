@@ -45,6 +45,11 @@ require.config({
       location: 'node_modules/aurelia-templating-resources/dist/amd',
       main : 'aurelia-templating-resources'
     },
+    {
+      name: 'aurelia-animator-css',
+      location: 'node_modules/aurelia-animator-css/dist/amd',
+      main : 'aurelia-animator-css'
+    },
     // {
     //   name: 'aurelia-i18n',
     //   location: 'node_modules/aurelia-i18n/dist/amd',
