@@ -25,6 +25,7 @@ require.config({
     "aurelia-task-queue": "node_modules/aurelia-task-queue/dist/amd/aurelia-task-queue",
     "aurelia-templating": "node_modules/aurelia-templating/dist/amd/aurelia-templating",
     "aurelia-templating-binding": "node_modules/aurelia-templating-binding/dist/amd/aurelia-templating-binding",
+    "aurelia-animator-css": "node_modules/aurelia-animator-css/dist/amd/aurelia-animator-css",
     //"aurelia-ui-virtualization": "node_modules/aurelia-ui-virtualization/dist/amd/aurelia-ui-virtualization",
     "text": "node_modules/text/text",
     "es6": "node_modules/requirejs-babel/es6",
